@@ -14,7 +14,6 @@ import AddLicense     from "./screens/AddLicense";
 import AssignDriver   from "./screens/AssignDriver";
 import Dashboard      from "./screens/Dashboard";
 
-/* Swap for any valid Lottie JSON CDN URL */
 const LOTTIE_URL =
   "https://assets3.lottiefiles.com/packages/lf20_UJNc2t.json";
 
@@ -28,8 +27,17 @@ export interface FormData {
   fleetSize:         string;
 }
 
-type RegStep  = 1 | 2 | 3;
-type AppView  =
+interface OnboardingData {
+  vehicleName:   string;
+  plateNumber:   string;
+  licenseNumber: string;
+  driverName:    string;
+  hasData:       boolean;
+  wasSkipped:    boolean;
+}
+
+type RegStep = 1 | 2 | 3;
+type AppView =
   | "login"
   | "forgot"
   | "register"
@@ -47,7 +55,15 @@ const INITIAL_FORM: FormData = {
   fleetSize:        "1-10 Vehicles",
 };
 
-/* Determine the initial app view from localStorage */
+const INITIAL_ONBOARDING: OnboardingData = {
+  vehicleName:   "",
+  plateNumber:   "",
+  licenseNumber: "",
+  driverName:    "",
+  hasData:       false,
+  wasSkipped:    false,
+};
+
 function getInitialView(): AppView {
   try {
     if (localStorage.getItem("flee_remember_me") === "true") {
@@ -55,10 +71,12 @@ function getInitialView(): AppView {
         ? "welcome"
         : "dashboard";
     }
-  } catch (_) {
-    /* localStorage blocked (e.g. private mode) – fall through */
-  }
+  } catch (_) {}
   return "login";
+}
+
+function getStoredAdminName(): string {
+  try { return localStorage.getItem("flee_admin_name") || "Lawal Rahman"; } catch (_) { return "Lawal Rahman"; }
 }
 
 /* ─── Step indicator ─────────────────────────────────────────────────────── */
@@ -120,9 +138,8 @@ function StepIndicator({ current }: { current: RegStep }) {
   );
 }
 
-/* ─── Success / Step 4 screen ────────────────────────────────────────────── */
+/* ─── Success screen ─────────────────────────────────────────────────────── */
 function SuccessScreen({ onGoToLogin }: { onGoToLogin: () => void }) {
-  /* Flag this device as having just completed registration */
   useEffect(() => {
     try { localStorage.setItem("flee_first_time", "true"); } catch (_) {}
   }, []);
@@ -132,33 +149,20 @@ function SuccessScreen({ onGoToLogin }: { onGoToLogin: () => void }) {
       className="min-h-screen bg-white relative overflow-hidden flex flex-col"
       style={{ fontFamily: "'Outfit', system-ui, sans-serif" }}
     >
-      {/* Lottie confetti – extreme left */}
-      <div
-        className="fixed left-0 top-0 h-screen w-[140px] sm:w-[180px] pointer-events-none z-10"
-        aria-hidden="true"
-      >
+      <div className="fixed left-0 top-0 h-screen w-[140px] sm:w-[180px] pointer-events-none z-10" aria-hidden="true">
+        <Player autoplay loop src={LOTTIE_URL} style={{ height: "100%", width: "100%" }} />
+      </div>
+      <div className="fixed right-0 top-0 h-screen w-[140px] sm:w-[180px] pointer-events-none z-10" aria-hidden="true">
         <Player autoplay loop src={LOTTIE_URL} style={{ height: "100%", width: "100%" }} />
       </div>
 
-      {/* Lottie confetti – extreme right */}
-      <div
-        className="fixed right-0 top-0 h-screen w-[140px] sm:w-[180px] pointer-events-none z-10"
-        aria-hidden="true"
-      >
-        <Player autoplay loop src={LOTTIE_URL} style={{ height: "100%", width: "100%" }} />
-      </div>
-
-      {/* Logo */}
       <header className="flex justify-center pt-7 flex-shrink-0">
         <FleeLogo />
       </header>
 
-      {/* Centered content */}
       <div className="flex-1 flex items-center justify-center px-6 relative z-20">
         <div className="flex flex-col items-center text-center gap-4">
-          <span className="text-[56px] leading-none select-none" aria-hidden="true">
-            🚀
-          </span>
+          <span className="text-[56px] leading-none select-none" aria-hidden="true">🚀</span>
           <h1
             className="flex items-center gap-2 text-[22px] sm:text-[24px] font-bold text-gray-900"
             style={{ letterSpacing: "-0.2px" }}
@@ -182,10 +186,8 @@ function SuccessScreen({ onGoToLogin }: { onGoToLogin: () => void }) {
         </div>
       </div>
 
-      {/* Car illustration */}
       <div
-        className="fixed bottom-0 right-0 pointer-events-none z-0
-                   w-[180px] sm:w-[230px] md:w-[280px]"
+        className="fixed bottom-0 right-0 pointer-events-none z-0 w-[180px] sm:w-[230px] md:w-[280px]"
         aria-hidden="true"
       >
         <CarIllustration />
@@ -201,6 +203,8 @@ export default function App() {
   const [vehicleStep, setVehicleStep] = useState<1 | 2 | 3>(1);
   const [formData,    setFormData]    = useState<FormData>(INITIAL_FORM);
   const [adminData,   setAdminData]   = useState<AdminData>(getInitialAdminData(""));
+  const [onboarding,  setOnboarding]  = useState<OnboardingData>(INITIAL_ONBOARDING);
+  const [adminName,   setAdminName]   = useState<string>(getStoredAdminName);
 
   function patchForm(patch: Partial<FormData>) {
     setFormData((p) => ({ ...p, ...patch }));
@@ -214,7 +218,7 @@ export default function App() {
     setAdminData(getInitialAdminData(""));
   }
 
-  /* ── Login screen ─────────────────────────────────────────────────────── */
+  /* ── Login ────────────────────────────────────────────────────────────── */
   if (view === "login") {
     return (
       <LoginScreen
@@ -223,8 +227,10 @@ export default function App() {
             if (rememberMe) localStorage.setItem("flee_remember_me", "true");
             else            localStorage.removeItem("flee_remember_me");
           } catch (_) {}
-          const isFirstTime =
-            (() => { try { return localStorage.getItem("flee_first_time") === "true"; } catch (_) { return false; } })();
+          const isFirstTime = (() => {
+            try { return localStorage.getItem("flee_first_time") === "true"; } catch (_) { return false; }
+          })();
+          setAdminName(getStoredAdminName());
           setView(isFirstTime ? "welcome" : "dashboard");
         }}
         onForgotPassword={() => setView("forgot")}
@@ -233,7 +239,7 @@ export default function App() {
     );
   }
 
-  /* ── Forgot password flow ─────────────────────────────────────────────── */
+  /* ── Forgot password ──────────────────────────────────────────────────── */
   if (view === "forgot") {
     return (
       <ForgotPassword
@@ -243,7 +249,7 @@ export default function App() {
     );
   }
 
-  /* ── Post-registration success screen ────────────────────────────────── */
+  /* ── Success screen ───────────────────────────────────────────────────── */
   if (view === "success") {
     return (
       <SuccessScreen
@@ -252,12 +258,12 @@ export default function App() {
     );
   }
 
-  /* ── First-time user: welcome ─────────────────────────────────────────── */
+  /* ── Welcome ──────────────────────────────────────────────────────────── */
   if (view === "welcome") {
     return <WelcomeScreen onGetStarted={() => setView("add-vehicle")} />;
   }
 
-  /* ── First-time user: add first vehicle ──────────────────────────────── */
+  /* ── Add vehicle flow ─────────────────────────────────────────────────── */
   if (view === "add-vehicle") {
     function goToDashboard() {
       try { localStorage.removeItem("flee_first_time"); } catch (_) {}
@@ -268,40 +274,65 @@ export default function App() {
     if (vehicleStep === 1) {
       return (
         <AddVehicle
-          onContinue={() => setVehicleStep(2)}
-          onSkip={goToDashboard}
+          onContinue={(vName, pNum) => {
+            setOnboarding((p) => ({ ...p, vehicleName: vName, plateNumber: pNum }));
+            setVehicleStep(2);
+          }}
+          onSkip={() => {
+            setOnboarding((p) => ({ ...p, wasSkipped: true, hasData: false }));
+            goToDashboard();
+          }}
         />
       );
     }
     if (vehicleStep === 2) {
       return (
         <AddLicense
-          onContinue={() => setVehicleStep(3)}
-          onSkip={goToDashboard}
+          onContinue={(lNum) => {
+            setOnboarding((p) => ({ ...p, licenseNumber: lNum }));
+            setVehicleStep(3);
+          }}
+          onSkip={() => {
+            setOnboarding((p) => ({ ...p, wasSkipped: true, hasData: false }));
+            goToDashboard();
+          }}
         />
       );
     }
     return (
       <AssignDriver
-        onContinue={goToDashboard}
-        onSkip={goToDashboard}
-      />
-    );
-  }
-
-  /* ── Returning user: dashboard placeholder ───────────────────────────── */
-  if (view === "dashboard") {
-    return (
-      <Dashboard
-        onLogout={() => {
-          try { localStorage.removeItem("flee_remember_me"); } catch (_) {}
-          setView("login");
+        onContinue={(dName) => {
+          setOnboarding((p) => ({ ...p, driverName: dName, hasData: true }));
+          goToDashboard();
+        }}
+        onSkip={() => {
+          setOnboarding((p) => ({ ...p, wasSkipped: true, hasData: false }));
+          goToDashboard();
         }}
       />
     );
   }
 
-  /* ── Registration flow (view === "register") ─────────────────────────── */
+  /* ── Dashboard ────────────────────────────────────────────────────────── */
+  if (view === "dashboard") {
+    return (
+      <Dashboard
+        onLogout={() => {
+          try { localStorage.removeItem("flee_remember_me"); } catch (_) {}
+          setOnboarding(INITIAL_ONBOARDING);
+          setView("login");
+        }}
+        adminName={adminName}
+        adminRole="Estate Manager"
+        hasData={onboarding.hasData}
+        vehicleName={onboarding.vehicleName}
+        plateNumber={onboarding.plateNumber}
+        driverName={onboarding.driverName}
+      />
+    );
+  }
+
+  /* ── Registration flow ────────────────────────────────────────────────── */
   return (
     <Shell>
       <StepIndicator current={regStep} />
@@ -333,7 +364,12 @@ export default function App() {
           prefillEmail={formData.email}
           data={adminData}
           onChange={patchAdmin}
-          onSubmit={() => setView("success")}
+          onSubmit={() => {
+            const name = adminData.fullName.trim() || "Lawal Rahman";
+            try { localStorage.setItem("flee_admin_name", name); } catch (_) {}
+            setAdminName(name);
+            setView("success");
+          }}
         />
       )}
     </Shell>

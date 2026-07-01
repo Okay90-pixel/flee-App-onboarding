@@ -4,7 +4,7 @@ import { Shell } from "../components/Shell";
 import { Field, INPUT_BASE, PrimaryButton } from "../components/FormControls";
 
 interface Props {
-  onContinue: () => void;
+  onContinue: (driverName: string) => void;
   onSkip: () => void;
 }
 
@@ -83,7 +83,7 @@ export default function AssignDriver({ onContinue, onSkip }: Props) {
           >
             Skip
           </button>
-          <PrimaryButton disabled={!isValid} onClick={onContinue}>
+          <PrimaryButton disabled={!isValid} onClick={() => onContinue(driverName)}>
             Continue
           </PrimaryButton>
         </div>

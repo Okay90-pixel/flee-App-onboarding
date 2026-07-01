@@ -4,7 +4,7 @@ import { Shell } from "../components/Shell";
 import { Field, INPUT_BASE, PrimaryButton } from "../components/FormControls";
 
 interface Props {
-  onContinue: () => void;
+  onContinue: (vehicleName: string, plateNumber: string) => void;
   onSkip: () => void;
 }
 
@@ -292,7 +292,7 @@ export default function AddVehicle({ onContinue, onSkip }: Props) {
           >
             Skip
           </button>
-          <PrimaryButton disabled={!isValid} onClick={onContinue}>
+          <PrimaryButton disabled={!isValid} onClick={() => onContinue(vehicleName, plateNumber)}>
             Continue
           </PrimaryButton>
         </div>

@@ -4,7 +4,7 @@ import { Shell } from "../components/Shell";
 import { Field, INPUT_BASE, PrimaryButton } from "../components/FormControls";
 
 interface Props {
-  onContinue: () => void;
+  onContinue: (licenseNumber: string) => void;
   onSkip: () => void;
 }
 
@@ -83,7 +83,7 @@ export default function AddLicense({ onContinue, onSkip }: Props) {
           >
             Skip
           </button>
-          <PrimaryButton disabled={!isValid} onClick={onContinue}>
+          <PrimaryButton disabled={!isValid} onClick={() => onContinue(licenseNumber)}>
             Continue
           </PrimaryButton>
         </div>
