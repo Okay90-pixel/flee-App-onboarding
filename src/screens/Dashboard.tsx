@@ -221,7 +221,7 @@ function EmptyStateBody() {
     <div className="border border-gray-200 rounded-2xl flex flex-col items-center py-12 px-8 gap-6">
       <p className="text-[17px] font-bold text-gray-800">No Recent Activity</p>
       <img
-        src="/image copy copy copy.png"
+        src="/image copy copy copy copy.png"
         alt=""
         aria-hidden="true"
         draggable={false}
