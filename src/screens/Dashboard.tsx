@@ -415,8 +415,8 @@ export default function Dashboard({
           <ScanLine size={18} />
         </button>
         <button type="button" aria-label="Notifications"
-          className="ml-3 w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center
-                     text-gray-400 hover:bg-gray-50 transition-colors duration-150 outline-none">
+          className="ml-3 w-10 h-10 rounded-full bg-[#111827] flex items-center justify-center
+                     text-white transition-colors duration-150 outline-none">
           <Bell size={18} />
         </button>
 
