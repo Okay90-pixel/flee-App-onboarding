@@ -215,30 +215,18 @@ function MetricCard({
   );
 }
 
-/* ─── No-activity illustration ─────────────────────────────────────────────── */
-function NoActivityIllustration() {
-  return (
-    <svg
-      viewBox="0 0 300 230"
-      xmlns="http://www.w3.org/2000/svg"
-      className="w-[260px] h-auto mx-auto select-none"
-      aria-hidden="true"
-    >
-      <ellipse cx="150" cy="138" rx="112" ry="92" fill="#F3F4F6" />
-      <rect x="62"  y="168" width="166" height="20" rx="10" fill="#E5E7EB" />
-      <rect x="74"  y="143" width="148" height="20" rx="10" fill="#D1D5DB" />
-      <circle cx="126" cy="110" r="50" fill="#FAFAFA" stroke="#C4C9D4" strokeWidth="7" />
-      <line x1="163" y1="147" x2="196" y2="183" stroke="#C4C9D4" strokeWidth="9" strokeLinecap="round" />
-    </svg>
-  );
-}
-
 /* ─── Empty state ──────────────────────────────────────────────────────────── */
 function EmptyStateBody() {
   return (
     <div className="border border-gray-200 rounded-2xl flex flex-col items-center py-12 px-8 gap-6">
       <p className="text-[17px] font-bold text-gray-800">No Recent Activity</p>
-      <NoActivityIllustration />
+      <img
+        src="/image copy copy copy.png"
+        alt=""
+        aria-hidden="true"
+        draggable={false}
+        className="w-[280px] h-auto select-none"
+      />
     </div>
   );
 }
@@ -466,11 +454,11 @@ export default function Dashboard({
                 type="button"
                 onClick={() => setActiveNav(id)}
                 className={[
-                  "flex items-center gap-3 pl-3 pr-4 py-2.5 rounded-xl text-left",
-                  "text-[14px] font-medium transition-colors duration-150 outline-none select-none",
+                  "flex items-center gap-3 pl-3 pr-4 py-2.5 text-left",
+                  "text-[14px] font-medium transition-all duration-150 outline-none select-none",
                   isActive
-                    ? "bg-[#EEF3FE] text-[#1E3A8A]"
-                    : "text-[#9CA3AF] hover:bg-gray-50 hover:text-gray-600",
+                    ? "bg-[#DBEAFE] text-[#1E3A8A] border border-[#3B82F6] rounded-full"
+                    : "text-[#9CA3AF] hover:bg-gray-50 hover:text-gray-600 rounded-xl border border-transparent",
                 ].join(" ")}
               >
                 {renderIcon(isActive)}
