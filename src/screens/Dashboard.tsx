@@ -2,7 +2,7 @@ import { useState } from "react";
 import {
   Car,
   Bell,
-  ScanLine,
+  Moon,
   Search,
   SlidersHorizontal,
   Upload,
@@ -14,6 +14,7 @@ import {
   ChevronRight,
 } from "lucide-react";
 import { FleeLogo } from "../components/Branding";
+import { LiveActivitySection } from "../components/LiveActivitySection";
 
 /* ─── Types ────────────────────────────────────────────────────────────────── */
 interface Props {
@@ -204,13 +205,20 @@ function MetricCard({
   growth?: string;
 }) {
   return (
-    <div className="flex flex-col gap-3 p-5 border border-gray-200 rounded-2xl bg-white min-w-0">
-      <div className="w-10 h-10 rounded-xl bg-[#EFF6FF] flex items-center justify-center flex-shrink-0">
-        <Icon size={20} className="text-[#1E3A8A]" />
+    <div className="flex flex-col gap-4 py-4 px-1.5 rounded-2xl bg-white min-w-0">
+      <div className="w-[30px] h-[30px] rounded-[4px] bg-[#EFF6FF] border-[0.5px] border-[#BFDBFE] flex items-center justify-center flex-shrink-0">
+        <Icon size={18} className="text-[#1E3A8A]" />
       </div>
-      <p className="text-[13px] text-gray-500 font-medium">{label}</p>
-      <p className="text-[26px] font-bold text-gray-900 leading-none">{count}</p>
-      {growth && <p className="text-[12.5px] font-semibold text-emerald-500">{growth}</p>}
+      <div className="flex flex-col gap-1">
+        <p className="text-[15px] font-normal leading-[150%]" style={{ color: "rgba(11,11,11,0.45)" }}>{label}</p>
+        <p
+          className="text-[22px] font-semibold leading-[130%]"
+          style={{ color: "rgba(11,11,11,0.7)", letterSpacing: "-0.002em" }}
+        >
+          {count}
+        </p>
+        {growth && <p className="text-[12.5px] font-semibold text-emerald-500">{growth}</p>}
+      </div>
     </div>
   );
 }
@@ -234,8 +242,15 @@ function EmptyStateBody() {
 /* ─── Status badge ─────────────────────────────────────────────────────────── */
 function StatusBadge({ status }: { status: string }) {
   return (
-    <span className="inline-flex items-center px-3 py-1 rounded-full text-[12px] font-semibold
-                     bg-emerald-50 text-emerald-600 border border-emerald-200">
+    <span
+      className="inline-flex items-center px-3 py-[5px] rounded-[6px] text-[14px] font-normal leading-[150%]"
+      style={{
+        background: "#CCEEDD",
+        color: "#106900",
+        border: "0.8px solid rgba(16,105,0,0.4)",
+        letterSpacing: "0.0025em",
+      }}
+    >
       {status}
     </span>
   );
@@ -270,33 +285,38 @@ function PopulatedBody({
   );
 
   return (
-    <div className="border border-gray-200 rounded-2xl overflow-hidden">
+    <div className="flex flex-col gap-6">
+      <LiveActivitySection />
+
+      <div className="border border-gray-200 rounded-2xl overflow-hidden">
       <div className="flex items-center gap-3 px-5 py-4 border-b border-gray-100">
         <div className="flex-1 relative">
-          <Search size={15} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
+          <Search size={17} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
           <input
             type="text"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search for anything"
-            className="w-full h-[42px] pl-9 pr-4 text-[13.5px] text-gray-700 bg-white
-                       border border-gray-200 rounded-xl outline-none placeholder-gray-400
+            className="w-full h-[39px] pl-11 pr-4 text-[18px] font-normal leading-[150%] text-gray-700 bg-white
+                       border border-[#DFE3EA] rounded-[8px] outline-none placeholder-[#A1A5AA]
                        focus:border-[#1E3A8A] focus:ring-2 focus:ring-[#1E3A8A]/[0.08]
                        transition-all duration-200"
           />
         </div>
         <button type="button"
-          className="flex items-center gap-2 h-[42px] px-4 border border-gray-200 rounded-xl
-                     text-[13.5px] text-gray-600 font-medium bg-white
-                     hover:bg-gray-50 transition-colors duration-150 flex-shrink-0 outline-none">
-          <SlidersHorizontal size={15} className="text-gray-400" />
+          className="flex items-center gap-1 h-[39px] px-3 rounded-[7px]
+                     text-[14px] font-normal bg-white
+                     hover:bg-gray-50 transition-colors duration-150 flex-shrink-0 outline-none"
+          style={{ border: "0.7px solid rgba(148,163,184,0.3)", color: "rgba(129,130,134,0.9)", letterSpacing: "0.0025em" }}>
+          <SlidersHorizontal size={15} style={{ color: "rgba(129,130,134,0.9)" }} />
           Filter
         </button>
         <button type="button"
-          className="flex items-center gap-2 h-[42px] px-4 border border-gray-200 rounded-xl
-                     text-[13.5px] text-gray-600 font-medium bg-white
-                     hover:bg-gray-50 transition-colors duration-150 flex-shrink-0 outline-none">
-          <Upload size={15} className="text-gray-400" />
+          className="flex items-center gap-1 h-[39px] px-3 rounded-[7px]
+                     text-[14px] font-normal bg-white
+                     hover:bg-gray-50 transition-colors duration-150 flex-shrink-0 outline-none"
+          style={{ border: "0.7px solid rgba(148,163,184,0.3)", color: "rgba(129,130,134,0.9)", letterSpacing: "0.0025em" }}>
+          <Upload size={15} style={{ color: "rgba(129,130,134,0.9)" }} />
           Export
         </button>
       </div>
@@ -304,9 +324,9 @@ function PopulatedBody({
       <div className="overflow-x-auto">
         <table className="w-full min-w-[640px]">
           <thead>
-            <tr className="border-b border-gray-200">
+            <tr style={{ background: "rgba(246,248,250,0.2)", borderTop: "1px solid rgba(58,58,58,0.2)", borderBottom: "1px solid rgba(58,58,58,0.2)" }}>
               {["Trip ID", "Vehicle", "Driver", "Status", "Start Time", "Action"].map((col) => (
-                <th key={col} className="px-5 py-3.5 text-left text-[13px] font-medium text-gray-500">
+                <th key={col} className="px-5 py-3.5 text-left text-[20px] font-normal leading-[150%] text-[#3A3A3A]">
                   {col}
                 </th>
               ))}
@@ -314,17 +334,18 @@ function PopulatedBody({
           </thead>
           <tbody>
             {filteredRows.map((row, i) => (
-              <tr key={i} className="border-b border-gray-100 last:border-b-0
+              <tr key={i} className="border-b border-[#E2E8F0] last:border-b-0
                                      hover:bg-gray-50/60 transition-colors duration-100">
-                <td className="px-5 py-4 text-[14px] text-gray-700">{row.id}</td>
-                <td className="px-5 py-4 text-[14px] text-gray-700">{row.vehicle}</td>
-                <td className="px-5 py-4 text-[14px] text-gray-700">{row.driver}</td>
-                <td className="px-5 py-4"><StatusBadge status={row.status} /></td>
-                <td className="px-5 py-4 text-[14px] text-gray-700">{row.startTime}</td>
-                <td className="px-5 py-4">
+                <td className="px-2.5 py-5 text-[18px] font-normal leading-[150%] text-[#4B4F55]">{row.id}</td>
+                <td className="px-2.5 py-5 text-[18px] font-normal leading-[150%]" style={{ color: "rgba(11,11,11,0.7)" }}>{row.vehicle}</td>
+                <td className="px-2.5 py-5 text-[18px] font-normal leading-[150%] text-[#4B4F55]">{row.driver}</td>
+                <td className="px-2.5 py-5"><StatusBadge status={row.status} /></td>
+                <td className="px-2.5 py-5 text-[18px] font-normal leading-[150%]" style={{ color: "rgba(11,11,11,0.6)" }}>{row.startTime}</td>
+                <td className="px-2.5 py-5">
                   <button type="button"
-                    className="px-4 py-1.5 border border-gray-200 rounded-lg text-[13px]
-                               text-gray-700 font-medium hover:bg-gray-50 transition-colors duration-150 outline-none">
+                    className="px-3 py-1.5 rounded-[7px] text-[14px] font-normal leading-[150%]
+                               hover:bg-blue-50/50 transition-colors duration-150 outline-none"
+                    style={{ border: "0.8px solid #1F6FEB", color: "#2563EB", letterSpacing: "0.0025em" }}>
                     View Details
                   </button>
                 </td>
@@ -336,33 +357,39 @@ function PopulatedBody({
 
       <div className="flex items-center justify-between px-5 py-4 border-t border-gray-100">
         <button type="button" disabled
-          className="flex items-center gap-1.5 text-[13px] text-gray-300 font-medium cursor-not-allowed select-none">
+          className="flex items-center gap-1.5 text-[14px] font-medium leading-[20px] cursor-not-allowed select-none opacity-40"
+          style={{ fontFamily: "Inter, sans-serif", color: "#818286" }}>
           <ChevronLeft size={15} />
           Previous
         </button>
         <div className="flex items-center gap-1">
           {[1, 2, 3].map((p) => (
             <button key={p} type="button"
-              className={[
-                "w-8 h-8 rounded-lg text-[13px] font-medium transition-colors duration-150 outline-none",
-                currentPage === p ? "bg-gray-900 text-white" : "text-gray-500 hover:bg-gray-100",
-              ].join(" ")}>
+              className="w-10 h-10 rounded-[8px] text-[14px] font-medium leading-[20px] transition-colors duration-150 outline-none"
+              style={{
+                fontFamily: "Inter, sans-serif",
+                background: currentPage === p ? "#EFF6FF" : "transparent",
+                color: currentPage === p ? "#1E3A8A" : "#667085",
+              }}>
               {p}
             </button>
           ))}
-          <span className="w-8 h-8 flex items-center justify-center text-[13px] text-gray-400">...</span>
+          <span className="w-10 h-10 flex items-center justify-center text-[14px]" style={{ fontFamily: "Inter, sans-serif", color: "#667085" }}>...</span>
           {[8, 9, 10].map((p) => (
             <button key={p} type="button"
-              className="w-8 h-8 rounded-lg text-[13px] font-medium text-gray-500 hover:bg-gray-100 transition-colors duration-150 outline-none">
+              className="w-10 h-10 rounded-[8px] text-[14px] font-medium leading-[20px] hover:bg-gray-100 transition-colors duration-150 outline-none"
+              style={{ fontFamily: "Inter, sans-serif", color: "#667085" }}>
               {p}
             </button>
           ))}
         </div>
         <button type="button"
-          className="flex items-center gap-1.5 h-[34px] px-4 border border-gray-200 rounded-lg
-                     text-[13px] text-gray-700 font-medium hover:bg-gray-50 transition-colors duration-150 outline-none">
+          className="flex items-center gap-2 h-[43px] px-3.5 rounded-[8px] shadow-sm
+                     text-[18px] font-normal leading-[150%] hover:bg-gray-50 transition-colors duration-150 outline-none"
+          style={{ border: "1px solid #D0D5DD", color: "#344054" }}>
           Next <ChevronRight size={15} />
         </button>
+      </div>
       </div>
     </div>
   );
@@ -403,31 +430,49 @@ export default function Dashboard({
       */}
       <header
         className="fixed top-0 left-0 right-0 h-[68px] bg-white border-b border-gray-100 z-30
-                   flex items-center pr-10"
+                   flex items-center gap-6 pr-10"
         style={{ paddingLeft: 124 }}
       >
         <FleeLogo />
+
+        <div className="flex items-center justify-between gap-2.5 w-[441px] h-[46px] px-2.5 py-1.5
+                        bg-[#F8FAFC] border-[0.8px] border-[#E2E8F0] rounded-[8px] flex-shrink-0">
+          <span className="text-[18px] font-normal leading-[150%] text-[#94A3B8]">Search</span>
+          <div className="flex items-center gap-1.5">
+            <span className="flex items-center justify-center px-1.5 h-[21px] rounded-[4px] text-[14px]
+                             text-[#C2C2C2]" style={{ background: "rgba(156,163,175,0.07)" }}>
+              ctrl
+            </span>
+            <span className="text-[12px] text-[#475569]">or</span>
+            <span className="text-[14px] text-[#1A1D21] font-normal">⌘K</span>
+          </div>
+        </div>
+
         <div className="flex-1" />
 
-        <button type="button" aria-label="Scan"
-          className="w-10 h-10 rounded-full border border-gray-200 flex items-center justify-center
-                     text-gray-400 hover:bg-gray-50 transition-colors duration-150 outline-none">
-          <ScanLine size={18} />
+        <button type="button" aria-label="Toggle theme"
+          className="w-[41px] h-[41px] rounded-full bg-[#E5E7EB] flex items-center justify-center
+                     text-[#141B34] hover:brightness-95 transition-all duration-150 outline-none">
+          <Moon size={16} />
         </button>
         <button type="button" aria-label="Notifications"
-          className="ml-3 w-10 h-10 rounded-full bg-[#111827] flex items-center justify-center
-                     text-white transition-colors duration-150 outline-none">
-          <Bell size={18} />
+          className="ml-3 w-[41px] h-[41px] rounded-full bg-[#E5E7EB] flex items-center justify-center
+                     text-[#141B34] hover:brightness-95 transition-all duration-150 outline-none">
+          <Bell size={16} />
         </button>
 
         <div className="flex items-center gap-3 ml-4">
-          <div className="w-10 h-10 rounded-xl bg-[#1E3A8A] flex items-center justify-center
-                          text-white text-[13px] font-bold select-none flex-shrink-0">
-            {getInitials(adminName)}
+          <div className="relative w-10 h-10 flex-shrink-0">
+            <div className="w-10 h-10 rounded-full bg-[#1E3A8A] flex items-center justify-center
+                            text-white text-[13px] font-bold select-none">
+              {getInitials(adminName)}
+            </div>
+            <span className="absolute bottom-0 right-0 w-[10px] h-[10px] rounded-full bg-[#3DA172]
+                             border-2 border-white" />
           </div>
           <div className="leading-tight">
-            <p className="text-[14px] font-bold text-gray-900 whitespace-nowrap">{adminName}</p>
-            <p className="text-[12px] text-gray-400 whitespace-nowrap">{adminRole}</p>
+            <p className="text-[18px] font-normal text-[#0B0B0B] leading-[150%] whitespace-nowrap">{adminName}</p>
+            <p className="text-[16px] font-normal leading-[150%] whitespace-nowrap" style={{ color: "rgba(11,11,11,0.45)" }}>{adminRole}</p>
           </div>
         </div>
       </header>
@@ -455,11 +500,12 @@ export default function Dashboard({
                 onClick={() => setActiveNav(id)}
                 className={[
                   "flex items-center gap-3 pl-3 pr-4 py-2.5 text-left",
-                  "text-[14px] font-medium transition-all duration-150 outline-none select-none",
+                  "text-[16px] font-normal leading-[150%] transition-all duration-150 outline-none select-none",
                   isActive
-                    ? "bg-[#DBEAFE] text-[#1E3A8A] border border-[#3B82F6] rounded-full"
-                    : "text-[#9CA3AF] hover:bg-gray-50 hover:text-gray-600 rounded-xl border border-transparent",
+                    ? "bg-[#DBEAFE] text-[#1E3A8A] border-[0.5px] border-[#2563EB] rounded-[6px]"
+                    : "hover:bg-gray-50 rounded-[10px] border border-transparent",
                 ].join(" ")}
+                style={!isActive ? { color: "rgba(11,11,11,0.25)" } : undefined}
               >
                 {renderIcon(isActive)}
                 {id}
@@ -488,19 +534,19 @@ export default function Dashboard({
           <div className="flex items-start justify-between gap-6">
             <div>
               <h1
-                className="text-[24px] font-bold text-gray-900 leading-tight"
-                style={{ letterSpacing: "-0.3px" }}
+                className="text-[24px] font-semibold text-[#1A1D21] leading-[130%]"
+                style={{ letterSpacing: "-0.002em" }}
               >
                 Fleet OverView
               </h1>
-              <p className="text-[14px] text-gray-400 mt-1">
+              <p className="text-[18px] font-normal text-[#6E7277] leading-[150%] mt-1">
                 Real-time operational control center
               </p>
             </div>
             <button
               type="button"
-              className="flex-shrink-0 h-[48px] px-8 bg-[#1E3A8A] text-white
-                         text-[14.5px] font-semibold rounded-[12px] select-none
+              className="flex-shrink-0 h-[50px] px-6 bg-[#1E3A8A] text-white border-[0.5px] border-[#E5E7EB]
+                         text-[20px] font-semibold leading-[130%] rounded-[12px] select-none
                          hover:brightness-110 active:scale-[0.98]
                          transition-all duration-200 ease-in-out"
             >
